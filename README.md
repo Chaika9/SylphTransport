@@ -9,10 +9,10 @@ Simple, message based, allocation free MMO Scale UDP networking in C#. And witho
 Designed for an Epitech project (UDP required)
 
 Sylph was designed with the [KISS Principle](https://en.wikipedia.org/wiki/KISS_principle) in mind.
-Sylph is fast and extremely reliable, designed for MMO scale Networking.
-Sylph uses framing, so anything sent will be received the same way.
-Sylph is raw C++ and can be used in KapEngine too.
-Thanks to the based version [Github](https://github.com/vis2k/Telepathy)
+<br>Sylph is fast and extremely reliable, designed for MMO scale Networking.
+<br>Sylph uses framing, so anything sent will be received the same way.
+<br>Sylph is raw C++ and can be used in KapEngine too.
+<br>Thanks to the based version [Github](https://github.com/vis2k/Telepathy)
 
 ## What makes Sylph special?
 
