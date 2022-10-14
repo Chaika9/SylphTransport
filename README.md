@@ -1,7 +1,9 @@
 [![KapEngine](https://img.shields.io/badge/KapEngine-brightgreen.svg)](https://github.com/benji-35/KapEngine/)
 [![KapMirror](https://img.shields.io/badge/KapMirror-brightgreen.svg)](https://github.com/Chaika9/KapMirror/)
 
-<img src="https://static.miraheze.org/mgqwiki/f/f1/80_sylph_st01.png" title="Sylph"/>
+<img src="https://static.miraheze.org/mgqwiki/b/bf/Sylph_Inside.png" title="Sylph"/>
+
+* Like UDP, the wind carries information, but sometimes it gets lost.
 
 Simple, message based, allocation free MMO Scale UDP networking in C#. And without wind magic.
 Designed for an Epitech project (UDP required)
