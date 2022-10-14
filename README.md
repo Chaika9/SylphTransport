@@ -1,7 +1,7 @@
 [![KapEngine](https://img.shields.io/badge/KapEngine-brightgreen.svg)](https://github.com/benji-35/KapEngine/)
 [![KapMirror](https://img.shields.io/badge/KapMirror-brightgreen.svg)](https://github.com/Chaika9/KapMirror/)
 
-<img src="https://static.miraheze.org/mgqwiki/b/bf/Sylph_Inside.png" title="Sylph"/>
+<img src="Images/Sylph.png" title="Sylph"/>
 
 ~~ Like UDP, the wind carries information, but sometimes it gets lost.
 
