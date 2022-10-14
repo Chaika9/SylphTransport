@@ -6,7 +6,7 @@
 ~~ Like UDP, the wind carries information, but sometimes it gets lost.
 
 Simple, message based, allocation free MMO Scale UDP networking in C#. And without wind magic.
-Designed for an Epitech project (UDP required)
+<br>Designed for an Epitech project (UDP required)
 
 Sylph was designed with the [KISS Principle](https://en.wikipedia.org/wiki/KISS_principle) in mind.
 <br>Sylph is fast and extremely reliable, designed for MMO scale Networking.
