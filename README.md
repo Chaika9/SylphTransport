@@ -3,7 +3,7 @@
 
 <img src="https://static.miraheze.org/mgqwiki/b/bf/Sylph_Inside.png" title="Sylph"/>
 
-* Like UDP, the wind carries information, but sometimes it gets lost.
+~~ Like UDP, the wind carries information, but sometimes it gets lost.
 
 Simple, message based, allocation free MMO Scale UDP networking in C#. And without wind magic.
 Designed for an Epitech project (UDP required)
