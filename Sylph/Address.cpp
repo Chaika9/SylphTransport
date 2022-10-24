@@ -1,13 +1,21 @@
 #include "Address.hpp"
 #include <iostream>
+#include <cstring>
 
 using namespace KapMirror::Sylph;
 
-Address::Address(std::string host, int port) {
+Address::Address() {
+    address = new addrinfo();
+    std::memset(address, 0, sizeof(addrinfo));
+
+    address->ai_addr = new sockaddr();
+    std::memset(address->ai_addr, 0, sizeof(sockaddr));
+}
+
+Address::Address(std::string host, int port, SocketType type) {
     addrinfo hints = {0};
     hints.ai_family = AF_INET; // Note: Windows fails to connect if left unspecified
-    hints.ai_socktype = SOCK_DGRAM; // UDP
-    hints.ai_protocol = IPPROTO_UDP; // Set UDP protocol
+    hints.ai_socktype = (int)type;
 
     int status = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &address);
     if (status != 0) {
@@ -15,14 +23,13 @@ Address::Address(std::string host, int port) {
     }
 }
 
-Address::Address(int port, bool passive) {
+Address::Address(int port, bool passive, SocketType type) {
     addrinfo hints = {0};
     hints.ai_family = AF_INET; // Note: Windows fails to connect if left unspecified
-    hints.ai_socktype = SOCK_DGRAM; // UDP
+    hints.ai_socktype = (int)type;
     if (passive) {
         hints.ai_flags = AI_PASSIVE;
     }
-    hints.ai_protocol = IPPROTO_UDP; // Set UDP protocol
 
     int status = getaddrinfo(NULL, std::to_string(port).c_str(), &hints, &address);
     if (status != 0) {
@@ -36,10 +43,14 @@ Address::~Address() {
     }
 }
 
-std::shared_ptr<Address> Address::createAddress(std::string host, int port) {
-    return std::make_shared<Address>(host, port);
+std::shared_ptr<Address> Address::createAddress() {
+    return std::make_shared<Address>();
 }
 
-std::shared_ptr<Address> Address::createAddress(int port, bool passive) {
-    return std::make_shared<Address>(port, passive);
+std::shared_ptr<Address> Address::createAddress(std::string host, int port, SocketType type) {
+    return std::make_shared<Address>(host, port, type);
+}
+
+std::shared_ptr<Address> Address::createAddress(int port, bool passive, SocketType type) {
+    return std::make_shared<Address>(port, passive, type);
 }

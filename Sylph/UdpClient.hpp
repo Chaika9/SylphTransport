@@ -9,7 +9,6 @@ namespace Sylph {
     class UdpClient {
         private:
         std::shared_ptr<Socket> socket;
-        bool isConnected;
 
         public:
         UdpClient(std::shared_ptr<Address> address);
@@ -20,25 +19,6 @@ namespace Sylph {
          * @brief Close the connection
          */
         void close();
-
-        /**
-         * @brief Connect to a server
-         *
-         * @param host Hostname or IP address
-         * @param port Port number
-         *
-         * @throws SocketException
-         */
-        void connect();
-
-        /**
-         * @brief Is the client connected to a server
-         *
-         * @return True if connected
-         */
-        bool connected() const {
-            return isConnected;
-        }
 
         /**
          * @brief Send data to the server

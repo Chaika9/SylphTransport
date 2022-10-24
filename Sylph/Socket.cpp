@@ -2,6 +2,7 @@
 #include "SocketException.hpp"
 #include <stdexcept>
 #include <iostream>
+#include <cstring>
 
 using namespace KapMirror::Sylph;
 
@@ -40,6 +41,10 @@ Socket::Socket(std::shared_ptr<Address> _address, SOCKET _socket_fd) : address(_
 
 Socket::~Socket() {
     close();
+}
+
+std::shared_ptr<Address> Socket::getAddress() const {
+    return address;
 }
 
 void Socket::close() {
@@ -118,6 +123,18 @@ void Socket::send(byte* buffer, int size, uint32_t flags) {
     }
 }
 
+void Socket::sendTo(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags) {
+    addrinfo* addr = address->getAddress();
+#ifdef __WINDOWS__
+    int status = ::sendto(socket_fd, (const char *)buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
+#else
+    int status = ::sendto(socket_fd, buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
+#endif
+    if (status == SOCKET_ERROR || status <= 0) {
+        throw SocketException("Socket send error");
+    }
+}
+
 int Socket::receive(byte* buffer, int size, uint32_t flags) {
 #ifdef __WINDOWS__
     auto received = ::recv(socket_fd, (char *)buffer, size, flags);
@@ -127,6 +144,22 @@ int Socket::receive(byte* buffer, int size, uint32_t flags) {
     if (received == SOCKET_ERROR || received <= 0) {
         return 0;
     }
+    return static_cast<int>(received);
+}
+
+int Socket::receiveFrom(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags) {
+    sockaddr addr = {0};
+    socklen_t addr_len = sizeof(sockaddr);
+#ifdef __WINDOWS__
+    auto received = ::recvfrom(socket_fd, (char *)buffer, size, flags, addr->ai_addr, &addr->ai_addrlen);
+#else
+    auto received = ::recvfrom(socket_fd, buffer, size, flags, &addr, &addr_len);
+#endif
+    if (received == SOCKET_ERROR || received <= 0) {
+        return 0;
+    }
+    std::memcpy(address->getAddress()->ai_addr, &addr, addr_len);
+    address->getAddress()->ai_addrlen = addr_len;
     return static_cast<int>(received);
 }
 

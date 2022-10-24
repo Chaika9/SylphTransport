@@ -19,15 +19,18 @@ void UdpListener::close() {
 
 void UdpListener::start() {
     socket->bind();
-    socket->listen();
 }
 
-std::shared_ptr<UdpClient> UdpListener::acceptUdpClient() {
-    auto clientSocket = socket->accept();
-    if (clientSocket->isInvalid()) {
-        throw SocketException("Invalid socket");
+void UdpListener::sendTo(std::shared_ptr<Address> address, byte* buffer, int size) {
+    socket->sendTo(buffer, size, address);
+}
+
+bool UdpListener::receiveFrom(std::shared_ptr<Address> address, int maxMessageSize, byte* buffer, int& size) {
+    size = socket->receiveFrom(buffer, maxMessageSize, address);
+    if (size <= 0) {
+        return false;
     }
-    return std::make_shared<UdpClient>(clientSocket);
+    return false;
 }
 
 bool UdpListener::isReadable() const {

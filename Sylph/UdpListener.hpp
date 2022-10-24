@@ -23,12 +23,9 @@ namespace Sylph {
          */
         void start();
 
-        /**
-         * @brief Accept a connection
-         *
-         * @return The client socket
-         */
-        std::shared_ptr<UdpClient> acceptUdpClient();
+        void sendTo(std::shared_ptr<Address> address, byte* buffer, int size);
+
+        bool receiveFrom(std::shared_ptr<Address> address, int maxMessageSize, byte* buffer, int& size);
 
         bool isReadable() const;
 
