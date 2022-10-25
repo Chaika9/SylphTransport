@@ -8,14 +8,14 @@ Client::Client() {
 }
 
 Client::~Client() {
-    if (client != nullptr) {
-        dispose();
-    }
+    dispose();
 }
 
 void Client::dispose() {
     connected = false;
-    client->close();
+    if (client != nullptr) {
+        client->close();
+    }
 
     // clean values
     client = nullptr;
@@ -51,8 +51,7 @@ void Client::connect(std::string ip, int port) {
     };
 
     connection->onDisconnected = [this](Connection& con) {
-        connected = false;
-        connection = nullptr;
+        dispose();
 
         if (onDisconnected != nullptr) {
             onDisconnected(*this);

@@ -13,8 +13,8 @@ Server::~Server() {
 void Server::close() {
     if (listener != nullptr) {
         listener->close();
-        listener = nullptr;
     }
+    listener = nullptr;
 }
 
 void Server::start(int port) {
@@ -82,7 +82,7 @@ void Server::tickIncoming() {
                         };
 
                         connection->onDisconnected = [this](Connection& con) {
-                            connections.remove(con.getConnectionId());
+                            connectionsToRemove.push_back(con.getConnectionId());
 
                             if (onDisconnected != nullptr) {
                                 onDisconnected(*this, con.getConnectionId());
@@ -104,6 +104,11 @@ void Server::tickIncoming() {
             return;
         }
     }
+
+    for (auto connectionId : connectionsToRemove) {
+        connections.remove(connectionId);
+    }
+    connectionsToRemove.clear();
 
     for (auto const& [id, conn] : connections) {
         conn->tick();

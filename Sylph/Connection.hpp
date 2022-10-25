@@ -30,11 +30,13 @@ namespace Sylph {
         std::shared_ptr<Address> address = nullptr;
         ConnectionState state;
 
+        int timeout;
+
         long long lastPingTime = 0;
         long long lastReceiveTime = 0;
 
         public:
-        Connection(int _connectionId, std::shared_ptr<Address> _address);
+        Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout = DEFAULT_TIMEOUT);
         virtual ~Connection() = default;
 
         int getConnectionId() const;

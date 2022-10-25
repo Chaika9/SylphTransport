@@ -4,7 +4,7 @@
 
 using namespace KapMirror::Sylph;
 
-Connection::Connection(int _connectionId, std::shared_ptr<Address> _address) : connectionId(_connectionId), address(_address) {
+Connection::Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout) : connectionId(_connectionId), address(_address), timeout(_timeout) {
     state = ConnectionState::Connected;
     lastReceiveTime = NetworkTime::localTime();
 }
@@ -139,8 +139,8 @@ void Connection::handlePing(long long time) {
 
 
 void Connection::handleTimeout(long long time) {
-    if (time >= lastReceiveTime + DEFAULT_TIMEOUT) {
-        std::cout << "Connection: Connection timed out after not receiving any message for " << DEFAULT_TIMEOUT << "ms. Disconnecting." << std::endl;
+    if (time >= lastReceiveTime + timeout) {
+        std::cout << "Connection: Connection timed out after not receiving any message for " << timeout << "ms. Disconnecting." << std::endl;
         disconnect();
     }
 }

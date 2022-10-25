@@ -5,6 +5,7 @@
 #include "KapMirror/Runtime/ArraySegment.hpp"
 #include "Dictionary.hpp"
 #include <functional>
+#include <list>
 
 #define MTU_DEF 1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 
@@ -15,6 +16,7 @@ namespace Sylph {
         std::shared_ptr<UdpListener> listener = nullptr;
 
         KapEngine::Dictionary<int, std::shared_ptr<ServerConnection>> connections;
+        std::list<int> connectionsToRemove;
 
         byte rawReceiveBuffer[MTU_DEF];
 
