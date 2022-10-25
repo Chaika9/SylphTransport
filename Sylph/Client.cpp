@@ -81,6 +81,10 @@ void Client::tick() {
 }
 
 void Client::tickIncoming() {
+    if (connection == nullptr) {
+        return;
+    }
+
     while (client->isReadable()) {
         try {
             int msgLength = 0;
@@ -96,4 +100,6 @@ void Client::tickIncoming() {
             std::cerr << "Client: Exception=" << e.what() << std::endl;
         }
     }
+
+    connection->tick();
 }

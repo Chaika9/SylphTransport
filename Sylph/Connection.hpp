@@ -5,12 +5,16 @@
 #include "KapMirror/Runtime/NetworkWriter.hpp"
 #include <functional>
 
+#define PING_INTERVAL 1000
+#define DEFAULT_TIMEOUT 10000
+
 namespace KapMirror {
 namespace Sylph {
     class Connection {
         protected:
         enum MessageType {
             Handshake = 0,
+            Ping,
             Data,
             Disconnect
         };
@@ -26,6 +30,9 @@ namespace Sylph {
         std::shared_ptr<Address> address = nullptr;
         ConnectionState state;
 
+        long long lastPingTime = 0;
+        long long lastReceiveTime = 0;
+
         public:
         Connection(int _connectionId, std::shared_ptr<Address> _address);
         virtual ~Connection() = default;
@@ -40,6 +47,8 @@ namespace Sylph {
 
         void rawInput(byte* buffer, int msgLength);
 
+        void tick();
+
         protected:
         virtual void rawSend(MessageType type, byte* buffer, int msgLength) = 0;
 
@@ -48,7 +57,13 @@ namespace Sylph {
 
         void handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySegment<byte>> message);
 
+        void handlePing(long long time);
+
+        void handleTimeout(long long time);
+
         void sendDisconnect();
+
+        void sendPing();
 
         public:
         std::function<void(Connection&)> onAuthenticated = nullptr;

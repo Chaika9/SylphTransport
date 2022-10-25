@@ -104,6 +104,10 @@ void Server::tickIncoming() {
             return;
         }
     }
+
+    for (auto const& [id, conn] : connections) {
+        conn->tick();
+    }
 }
 
 int Server::getConnectionId(std::shared_ptr<Address> address) {

@@ -1,10 +1,12 @@
 #include "Connection.hpp"
+#include "KapMirror/Runtime/NetworkTime.hpp"
 #include <iostream>
 
 using namespace KapMirror::Sylph;
 
 Connection::Connection(int _connectionId, std::shared_ptr<Address> _address) : connectionId(_connectionId), address(_address) {
     state = ConnectionState::Connected;
+    lastReceiveTime = NetworkTime::localTime();
 }
 
 int Connection::getConnectionId() const {
@@ -12,7 +14,7 @@ int Connection::getConnectionId() const {
 }
 
 void Connection::disconnect() {
-    if (state != ConnectionState::Connected) {
+    if (state == ConnectionState::Disconnected) {
         return;
     }
 
@@ -60,17 +62,34 @@ void Connection::rawInput(byte* buffer, int msgLength) {
     }
 }
 
+void Connection::tick() {
+    long long time = NetworkTime::localTime();
+    switch (state) {
+        case ConnectionState::Connected: {
+            handleTimeout(time);
+            break;
+        }
+        case ConnectionState::Authenticated: {
+            handlePing(time);
+            handleTimeout(time);
+            break;
+        }
+    }
+}
+
 void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegment<byte>> message) {
     switch (type) {
         case MessageType::Handshake: {
             std::cout << "Connection: received handshake" << std::endl;
             state = ConnectionState::Authenticated;
+            lastReceiveTime = NetworkTime::localTime();
 
             if (onAuthenticated != nullptr) {
                 onAuthenticated(*this);
             }
             break;
         }
+        case MessageType::Ping:
         case MessageType::Data:
         case MessageType::Disconnect: {
             std::cout << "Connection: received invalid type " << (int)type << " while Connected. Disconnecting the connection." << std::endl;
@@ -87,8 +106,13 @@ void Connection::handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySe
             disconnect();
             break;
         }
+        case MessageType::Ping: {
+            lastReceiveTime = NetworkTime::localTime();
+            break;
+        }
         case MessageType::Data: {
             if (message->getSize() > 0) {
+                lastReceiveTime = NetworkTime::localTime();
                 if (onData != nullptr) {
                     onData(*this, message);
                 }
@@ -106,6 +130,25 @@ void Connection::handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySe
     }
 }
 
+void Connection::handlePing(long long time) {
+    if (time >= lastPingTime + PING_INTERVAL) {
+        sendPing();
+        lastPingTime = time;
+    }
+}
+
+
+void Connection::handleTimeout(long long time) {
+    if (time >= lastReceiveTime + DEFAULT_TIMEOUT) {
+        std::cout << "Connection: Connection timed out after not receiving any message for " << DEFAULT_TIMEOUT << "ms. Disconnecting." << std::endl;
+        disconnect();
+    }
+}
+
 void Connection::sendDisconnect() {
     rawSend(MessageType::Disconnect, nullptr, 0);
+}
+
+void Connection::sendPing() {
+    rawSend(MessageType::Ping, nullptr, 0);
 }
