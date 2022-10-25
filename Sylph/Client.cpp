@@ -22,6 +22,10 @@ void Client::dispose() {
     connection = nullptr;
 }
 
+bool Client::isConnected() const {
+    return connected;
+}
+
 void Client::connect(std::string ip, int port) {
     if (connected) {
         std::cerr << "Client: Sylph Client can not create connection because an existing connection is connected" << std::endl;

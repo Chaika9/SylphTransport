@@ -22,6 +22,8 @@ namespace Sylph {
         Client();
         ~Client();
 
+        bool isConnected() const;
+
         void connect(std::string ip, int port);
 
         void disconnect();
