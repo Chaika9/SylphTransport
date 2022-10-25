@@ -151,7 +151,7 @@ int Socket::receiveFrom(byte* buffer, int size, std::shared_ptr<Address> address
     sockaddr addr = {0};
     socklen_t addr_len = sizeof(sockaddr);
 #ifdef __WINDOWS__
-    auto received = ::recvfrom(socket_fd, (char *)buffer, size, flags, addr->ai_addr, &addr->ai_addrlen);
+    auto received = ::recvfrom(socket_fd, (char *)buffer, size, flags, &addr, &addr_len);
 #else
     auto received = ::recvfrom(socket_fd, buffer, size, flags, &addr, &addr_len);
 #endif
