@@ -43,6 +43,19 @@ Address::~Address() {
     }
 }
 
+std::string Address::toString() const {
+    if (address == nullptr) {
+        return "null";
+    }
+
+    char host[NI_MAXHOST];
+    char service[NI_MAXSERV];
+    if (getnameinfo(address->ai_addr, address->ai_addrlen, host, NI_MAXHOST, service, NI_MAXSERV, 0)) {
+        return "";
+    }
+    return std::string(host) + ":" + std::string(service);
+}
+
 std::shared_ptr<Address> Address::createAddress() {
     return std::make_shared<Address>();
 }

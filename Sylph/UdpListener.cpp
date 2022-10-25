@@ -30,7 +30,7 @@ bool UdpListener::receiveFrom(std::shared_ptr<Address> address, int maxMessageSi
     if (size <= 0) {
         return false;
     }
-    return false;
+    return true;
 }
 
 bool UdpListener::isReadable() const {

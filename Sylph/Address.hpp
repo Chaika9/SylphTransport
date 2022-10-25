@@ -31,6 +31,8 @@ namespace Sylph {
             return address;
         }
 
+        std::string toString() const;
+
         static std::shared_ptr<Address> createAddress();
 
         static std::shared_ptr<Address> createAddress(std::string host, int port, SocketType type = SocketType::TCP);
