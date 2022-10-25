@@ -61,14 +61,35 @@ void Server::tickIncoming() {
                 connectionId = getConnectionId(clientAddress);
 
                 if (msgLength <= MTU_DEF) {
-                    std::cout << "Server: Received " << msgLength << " bytes from " << clientAddress->toString() << ", connectionId=" << connectionId << std::endl;
                     std::shared_ptr<ServerConnection> connection;
                     if (!connections.tryGetValue(connectionId, connection)) {
                         std::cout << "Server: New connection" << std::endl;
 
-                        connection = std::make_shared<ServerConnection>(connectionId, clientAddress);
-                        connections[connectionId] = connection;
+                        connection = std::make_shared<ServerConnection>(connectionId, clientAddress, listener);
 
+                        connection->onAuthenticated = [this](Connection& con) {
+                            con.sendHandshake();
+
+                            if (onConnected != nullptr) {
+                                onConnected(*this, con.getConnectionId());
+                            }
+                        };
+
+                        connection->onData = [this](Connection& con, std::shared_ptr<ArraySegment<byte>> message) {
+                            if (onData != nullptr) {
+                                onData(*this, con.getConnectionId(), message);
+                            }
+                        };
+
+                        connection->onDisconnected = [this](Connection& con) {
+                            connections.remove(con.getConnectionId());
+
+                            if (onDisconnected != nullptr) {
+                                onDisconnected(*this, con.getConnectionId());
+                            }
+                        };
+
+                        connections[connectionId] = connection;
                         connection->rawInput(rawReceiveBuffer, msgLength);
                     } else {
                         connection->rawInput(rawReceiveBuffer, msgLength);

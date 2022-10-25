@@ -1,19 +1,22 @@
 #pragma once
 
 #include "UdpClient.hpp"
-#include "MagnificentReceivePipe.hpp"
+#include "ClientConnection.hpp"
 #include "KapMirror/Runtime/ArraySegment.hpp"
+#include <functional>
+
+#define MTU_DEF 1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 
 namespace KapMirror {
 namespace Sylph {
     class Client {
         private:
-        volatile bool running;
         bool connected;
 
         std::shared_ptr<UdpClient> client = nullptr;
+        std::shared_ptr<ClientConnection> connection = nullptr;
 
-        MagnificentReceivePipe receivePipe;
+        byte rawReceiveBuffer[MTU_DEF];
 
         public:
         Client();
@@ -31,6 +34,11 @@ namespace Sylph {
         void dispose();
 
         void tickIncoming();
+
+        public:
+        std::function<void(Client&)> onConnected = nullptr;
+        std::function<void(Client&)> onDisconnected = nullptr;
+        std::function<void(Client&, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
     };
 }
 }

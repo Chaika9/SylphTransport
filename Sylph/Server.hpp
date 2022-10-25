@@ -2,11 +2,9 @@
 
 #include "UdpListener.hpp"
 #include "ServerConnection.hpp"
-#include "MagnificentReceivePipe.hpp"
 #include "KapMirror/Runtime/ArraySegment.hpp"
 #include "Dictionary.hpp"
-#include <thread>
-#include <mutex>
+#include <functional>
 
 #define MTU_DEF 1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 
@@ -17,7 +15,6 @@ namespace Sylph {
         std::shared_ptr<UdpListener> listener = nullptr;
 
         KapEngine::Dictionary<int, std::shared_ptr<ServerConnection>> connections;
-        MagnificentReceivePipe receivePipe;
 
         byte rawReceiveBuffer[MTU_DEF];
 
@@ -39,6 +36,11 @@ namespace Sylph {
         void tickIncoming();
 
         int getConnectionId(std::shared_ptr<Address> address);
+
+        public:
+        std::function<void(Server&, int)> onConnected = nullptr;
+        std::function<void(Server&, int)> onDisconnected = nullptr;
+        std::function<void(Server&, int, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
     };
 }
 }
