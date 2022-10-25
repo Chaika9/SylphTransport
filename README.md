@@ -16,8 +16,8 @@ Sylph was designed with the [KISS Principle](https://en.wikipedia.org/wiki/KISS_
 
 ## What makes Sylph special?
 
-- Concurrent: Sylph uses one thread per connection. It can make heavy use of multi core processors.
+- Uses no threads to work.
 - Simple: Sylph wraps all the insanity behind Connect/Send/Disconnect/Tick.
 
 ## Credits
-vis2k & Paul - for [Telepathy](https://github.com/vis2k/Telepathy)
+vis2k & Paul - for [Telepathy](https://github.com/vis2k/Telepathy) and [kcp2k](https://github.com/vis2k/kcp2k)
