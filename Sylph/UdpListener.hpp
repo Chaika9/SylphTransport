@@ -3,8 +3,7 @@
 #include "UdpClient.hpp"
 #include "SocketException.hpp"
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class UdpListener {
         private:
         std::shared_ptr<Socket> socket;
@@ -33,5 +32,4 @@ namespace Sylph {
 
         void setBlocking(bool blocking);
     };
-}
 }

@@ -3,8 +3,7 @@
 #include "Connection.hpp"
 #include "UdpListener.hpp"
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class ServerConnection : public Connection {
         private:
         std::shared_ptr<UdpListener> listener;
@@ -15,5 +14,4 @@ namespace Sylph {
         protected:
         void rawSend(MessageType type, byte* buffer, int msgLength) override;
     };
-}
 }

@@ -30,6 +30,8 @@ void Connection::disconnect() {
     if (onDisconnected != nullptr) {
         onDisconnected(*this);
     }
+
+    std::cout << "Connection: Disposed." << std::endl;
 }
 
 void Connection::send(std::shared_ptr<ArraySegment<byte>> message) {
@@ -48,6 +50,10 @@ void Connection::sendHandshake() {
 }
 
 void Connection::rawInput(byte* buffer, int msgLength) {
+    if (state == ConnectionState::Disconnected) {
+        return;
+    }
+
     if (msgLength <= 0) {
         return;
     }
@@ -63,6 +69,10 @@ void Connection::rawInput(byte* buffer, int msgLength) {
 }
 
 void Connection::tick() {
+    if (state == ConnectionState::Disconnected) {
+        return;
+    }
+
     long long time = NetworkTime::localTime();
     switch (state) {
         case ConnectionState::Connected: {

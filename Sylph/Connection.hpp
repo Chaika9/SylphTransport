@@ -8,8 +8,7 @@
 #define PING_INTERVAL 1000
 #define DEFAULT_TIMEOUT 10000
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class Connection {
         protected:
         enum MessageType {
@@ -72,5 +71,4 @@ namespace Sylph {
         std::function<void(Connection&, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
         std::function<void(Connection&)> onDisconnected = nullptr;
     };
-}
 }

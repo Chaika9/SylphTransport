@@ -3,8 +3,7 @@
 #include "Connection.hpp"
 #include "UdpClient.hpp"
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class ClientConnection : public Connection {
         private:
         std::shared_ptr<UdpClient> client;
@@ -17,5 +16,4 @@ namespace Sylph {
         protected:
         void rawSend(MessageType type, byte* buffer, int msgLength) override;
     };
-}
 }

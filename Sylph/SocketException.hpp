@@ -3,8 +3,7 @@
 #include <exception>
 #include <string>
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class SocketException : public std::exception {
         std::string _message;
 
@@ -16,5 +15,4 @@ namespace Sylph {
             return _message.c_str();
         }
     };
-}
 }

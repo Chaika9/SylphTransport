@@ -9,8 +9,7 @@
 
 #define MTU_DEF 1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class Server {
         private:
         std::shared_ptr<UdpListener> listener = nullptr;
@@ -44,5 +43,4 @@ namespace Sylph {
         std::function<void(Server&, int)> onDisconnected = nullptr;
         std::function<void(Server&, int, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
     };
-}
 }

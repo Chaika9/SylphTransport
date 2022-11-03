@@ -6,8 +6,7 @@
 #include <memory>
 #include <string>
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class Socket {
         private:
         std::shared_ptr<Address> address;
@@ -95,5 +94,4 @@ namespace Sylph {
 
         static std::shared_ptr<Socket> createSocket(std::shared_ptr<Address> address, SOCKET socket_fd);
     };
-}
 }

@@ -4,8 +4,7 @@
 #include <memory>
 #include <string>
 
-namespace KapMirror {
-namespace Sylph {
+namespace KapMirror::Sylph {
     class Address {
         public:
         enum class SocketType {
@@ -39,5 +38,4 @@ namespace Sylph {
 
         static std::shared_ptr<Address> createAddress(int port, bool passive = true, SocketType type = SocketType::TCP);
     };
-}
 }
