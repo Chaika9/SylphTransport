@@ -84,7 +84,7 @@ void Client::tick() {
 }
 
 void Client::tickIncoming() {
-    if (connection == nullptr) {
+    if (!connected || connection == nullptr) {
         return;
     }
 
