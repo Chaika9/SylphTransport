@@ -10,31 +10,22 @@
 
 namespace KapMirror::Sylph {
     class Connection {
-        protected:
-        enum MessageType {
-            Handshake = 0,
-            Ping,
-            Data,
-            Disconnect
-        };
+      protected:
+        enum MessageType { Handshake = 0, Ping, Data, Disconnect };
 
-        enum ConnectionState {
-            Disconnected,
-            Connected,
-            Authenticated
-        };
+        enum ConnectionState { Disconnected, Connected, Authenticated };
 
-        protected:
+      protected:
         int connectionId;
         std::shared_ptr<Address> address = nullptr;
         ConnectionState state;
 
         int timeout;
 
-        long long lastPingTime = 0;
+        long long lastPingTime    = 0;
         long long lastReceiveTime = 0;
 
-        public:
+      public:
         Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout = DEFAULT_TIMEOUT);
         virtual ~Connection() = default;
 
@@ -50,10 +41,10 @@ namespace KapMirror::Sylph {
 
         void tick();
 
-        protected:
+      protected:
         virtual void rawSend(MessageType type, byte* buffer, int msgLength) = 0;
 
-        private:
+      private:
         void handleOnConnected(MessageType type, std::shared_ptr<ArraySegment<byte>> message);
 
         void handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySegment<byte>> message);
@@ -66,9 +57,9 @@ namespace KapMirror::Sylph {
 
         void sendPing();
 
-        public:
-        std::function<void(Connection&)> onAuthenticated = nullptr;
+      public:
+        std::function<void(Connection&)> onAuthenticated                             = nullptr;
         std::function<void(Connection&, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
-        std::function<void(Connection&)> onDisconnected = nullptr;
+        std::function<void(Connection&)> onDisconnected                              = nullptr;
     };
-}
+} // namespace KapMirror::Sylph

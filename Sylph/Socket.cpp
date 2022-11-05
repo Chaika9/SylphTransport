@@ -1,7 +1,6 @@
 #include "Socket.hpp"
 #include "SocketException.hpp"
 #include <stdexcept>
-#include <iostream>
 #include <cstring>
 
 using namespace KapMirror::Sylph;
@@ -22,7 +21,7 @@ Socket::Socket(std::shared_ptr<Address> _address) : address(_address), socket_fd
 
     int opval = 1;
 #ifdef __WINDOWS__
-    ::setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (const char *)&opval, sizeof(int));
+    ::setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, (const char*)&opval, sizeof(int));
 #else
     ::setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &opval, sizeof(int));
 #endif
@@ -39,13 +38,9 @@ Socket::Socket(std::shared_ptr<Address> _address, SOCKET _socket_fd) : address(_
     }
 }
 
-Socket::~Socket() {
-    close();
-}
+Socket::~Socket() { close(); }
 
-std::shared_ptr<Address> Socket::getAddress() const {
-    return address;
-}
+std::shared_ptr<Address> Socket::getAddress() const { return address; }
 
 void Socket::close() {
     if (socket_fd != INVALID_SOCKET) {
@@ -61,15 +56,15 @@ void Socket::close() {
 
 void Socket::bind() {
     addrinfo* addr = address->getAddress();
-    int status = ::bind(socket_fd, addr->ai_addr, addr->ai_addrlen);
-    int lastError = SocketLastError;
+    int status     = ::bind(socket_fd, addr->ai_addr, addr->ai_addrlen);
+    int lastError  = SocketLastError;
     if (status == SOCKET_ERROR && lastError != EWOULDBLOCK && lastError != EAGAIN && lastError != EINPROGRESS) {
         throw SocketException("Socket bind error");
     }
 }
 
-void Socket::listen() {
-    int status = ::listen(socket_fd, SOMAXCONN);
+void Socket::listen() const {
+    int status    = ::listen(socket_fd, SOMAXCONN);
     int lastError = SocketLastError;
     if (status == SOCKET_ERROR && lastError != EWOULDBLOCK && lastError != EAGAIN && lastError != EINPROGRESS) {
         throw SocketException("Socket listen error");
@@ -82,7 +77,7 @@ void Socket::connect() {
     }
 
     addrinfo* addr = address->getAddress();
-    int status = ::connect(socket_fd, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+    int status     = ::connect(socket_fd, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
     if (status == 0) {
         return;
     }
@@ -100,44 +95,44 @@ std::shared_ptr<Socket> Socket::accept() {
     return Socket::createSocket(address, client_fd);
 }
 
-void Socket::setBlocking(bool blocking) {
+void Socket::setBlocking(bool blocking) const {
     u_long mode = blocking ? 0 : 1;
 #ifdef __WINDOWS__
     int status = ioctlsocket(socket_fd, FIONBIO, &mode);
 #else
-    int status = ioctl(socket_fd, FIONBIO, (char *)&mode);
+    int status    = ioctl(socket_fd, FIONBIO, (char*)&mode);
 #endif
     if (status == SOCKET_ERROR) {
         throw SocketException("Socket set blocking error");
     }
 }
 
-void Socket::send(byte* buffer, int size, uint32_t flags) {
+void Socket::send(byte* buffer, int size, uint32_t flags) const {
 #ifdef __WINDOWS__
-    int status = ::send(socket_fd, (const char *)buffer, size, flags);
+    int status = ::send(socket_fd, (const char*)buffer, size, flags);
 #else
-    int status = ::send(socket_fd, buffer, size, flags);
+    int status    = ::send(socket_fd, buffer, size, flags);
 #endif
     if (status == SOCKET_ERROR || status <= 0) {
         throw SocketException("Socket send error");
     }
 }
 
-void Socket::sendTo(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags) {
+void Socket::sendTo(byte* buffer, int size, const std::shared_ptr<Address>& address, uint32_t flags) const {
     addrinfo* addr = address->getAddress();
 #ifdef __WINDOWS__
-    int status = ::sendto(socket_fd, (const char *)buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
+    int status = ::sendto(socket_fd, (const char*)buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
 #else
-    int status = ::sendto(socket_fd, buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
+    int status    = ::sendto(socket_fd, buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
 #endif
     if (status == SOCKET_ERROR || status <= 0) {
         throw SocketException("Socket send error");
     }
 }
 
-int Socket::receive(byte* buffer, int size, uint32_t flags) {
+int Socket::receive(byte* buffer, int size, uint32_t flags) const {
 #ifdef __WINDOWS__
-    auto received = ::recv(socket_fd, (char *)buffer, size, flags);
+    auto received = ::recv(socket_fd, (char*)buffer, size, flags);
 #else
     auto received = ::recv(socket_fd, buffer, size, flags);
 #endif
@@ -147,11 +142,11 @@ int Socket::receive(byte* buffer, int size, uint32_t flags) {
     return static_cast<int>(received);
 }
 
-int Socket::receiveFrom(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags) {
-    sockaddr addr = {0};
+int Socket::receiveFrom(byte* buffer, int size, const std::shared_ptr<Address>& address, uint32_t flags) const {
+    sockaddr addr      = {0};
     socklen_t addr_len = sizeof(sockaddr);
 #ifdef __WINDOWS__
-    auto received = ::recvfrom(socket_fd, (char *)buffer, size, flags, &addr, &addr_len);
+    auto received = ::recvfrom(socket_fd, (char*)buffer, size, flags, &addr, &addr_len);
 #else
     auto received = ::recvfrom(socket_fd, buffer, size, flags, &addr, &addr_len);
 #endif
@@ -171,14 +166,12 @@ bool Socket::isInvalid() const {
     fd_set set;
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 1000;
-    int status = ::select(static_cast<int>(socket_fd + 1), nullptr, nullptr, &set, &timeout);
+    timeval timeout = {0, 1000};
+    int status      = ::select(static_cast<int>(socket_fd + 1), nullptr, nullptr, &set, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }
-    return (status == 1) ? true : false;
+    return (status == 1);
 }
 
 bool Socket::isReadable() const {
@@ -189,14 +182,12 @@ bool Socket::isReadable() const {
     fd_set set;
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 1000;
-    int status = ::select(static_cast<int>(socket_fd + 1), &set, nullptr, nullptr, &timeout);
+    timeval timeout = {0, 1000};
+    int status      = ::select(static_cast<int>(socket_fd + 1), &set, nullptr, nullptr, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }
-    return (status == 1) ? true : false;
+    return (status == 1);
 }
 
 bool Socket::isWritable() const {
@@ -207,20 +198,16 @@ bool Socket::isWritable() const {
     fd_set set;
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
-    timeval timeout;
-    timeout.tv_sec = 0;
-    timeout.tv_usec = 1000;
-    int status = ::select(static_cast<int>(socket_fd + 1), nullptr, &set, nullptr, &timeout);
+    timeval timeout = {0, 1000};
+    int status      = ::select(static_cast<int>(socket_fd + 1), nullptr, &set, nullptr, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }
-    return (status == 1) ? true : false;
+    return (status == 1);
 }
 
-std::shared_ptr<Socket> Socket::createSocket(std::shared_ptr<Address> address) {
-    return std::make_shared<Socket>(address);
-}
+std::shared_ptr<Socket> Socket::createSocket(const std::shared_ptr<Address>& address) { return std::make_shared<Socket>(address); }
 
-std::shared_ptr<Socket> Socket::createSocket(std::shared_ptr<Address> address, SOCKET socket_fd) {
+std::shared_ptr<Socket> Socket::createSocket(const std::shared_ptr<Address>& address, SOCKET socket_fd) {
     return std::make_shared<Socket>(address, socket_fd);
 }

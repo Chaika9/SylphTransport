@@ -20,4 +20,5 @@ Sylph was designed with the [KISS Principle](https://en.wikipedia.org/wiki/KISS_
 - Simple: Sylph wraps all the insanity behind Connect/Send/Disconnect/Tick.
 
 ## Credits
+
 vis2k & Paul - for [Telepathy](https://github.com/vis2k/Telepathy) and [kcp2k](https://github.com/vis2k/kcp2k)

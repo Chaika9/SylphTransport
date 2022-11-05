@@ -1,33 +1,26 @@
 #include "UdpClient.hpp"
-#include "SocketException.hpp"
 
 using namespace KapMirror::Sylph;
 
-UdpClient::UdpClient(std::shared_ptr<Address> address) {
+UdpClient::UdpClient(const std::shared_ptr<Address>& address) {
     if (address == nullptr) {
         throw std::runtime_error("Address cannot be null");
     }
     socket = Socket::createSocket(address);
 }
 
-UdpClient::UdpClient(std::shared_ptr<Socket> socket) {
+UdpClient::UdpClient(const std::shared_ptr<Socket>& socket) {
     if (socket == nullptr) {
         throw std::runtime_error("Socket cannot be null");
     }
     this->socket = socket;
 }
 
-UdpClient::~UdpClient() {
-    socket->close();
-}
+UdpClient::~UdpClient() { socket->close(); }
 
-void UdpClient::close() {
-    socket->close();
-}
+void UdpClient::close() { socket->close(); }
 
-void UdpClient::send(byte* buffer, int size) {
-    socket->sendTo(buffer, size, socket->getAddress());
-}
+void UdpClient::send(byte* buffer, int size) { socket->sendTo(buffer, size, socket->getAddress()); }
 
 bool UdpClient::receive(int maxMessageSize, byte* buffer, int& size) {
     size = socket->receiveFrom(buffer, maxMessageSize, socket->getAddress());
@@ -37,14 +30,8 @@ bool UdpClient::receive(int maxMessageSize, byte* buffer, int& size) {
     return true;
 }
 
-bool UdpClient::isReadable() const {
-    return socket->isReadable();
-}
+bool UdpClient::isReadable() const { return socket->isReadable(); }
 
-bool UdpClient::isWritable() const {
-    return socket->isWritable();
-}
+bool UdpClient::isWritable() const { return socket->isWritable(); }
 
-void UdpClient::setBlocking(bool blocking) {
-    socket->setBlocking(blocking);
-}
+void UdpClient::setBlocking(bool blocking) { socket->setBlocking(blocking); }

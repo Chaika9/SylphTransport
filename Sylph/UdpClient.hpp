@@ -6,12 +6,12 @@
 
 namespace KapMirror::Sylph {
     class UdpClient {
-        private:
+      private:
         std::shared_ptr<Socket> socket;
 
-        public:
-        UdpClient(std::shared_ptr<Address> address);
-        UdpClient(std::shared_ptr<Socket> socket);
+      public:
+        explicit UdpClient(const std::shared_ptr<Address>& address);
+        explicit UdpClient(const std::shared_ptr<Socket>& socket);
         ~UdpClient();
 
         /**
@@ -43,4 +43,4 @@ namespace KapMirror::Sylph {
 
         void setBlocking(bool blocking);
     };
-}
+} // namespace KapMirror::Sylph

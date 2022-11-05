@@ -5,11 +5,11 @@
 
 namespace KapMirror::Sylph {
     class UdpListener {
-        private:
+      private:
         std::shared_ptr<Socket> socket;
 
-        public:
-        UdpListener(std::shared_ptr<Address> address);
+      public:
+        explicit UdpListener(const std::shared_ptr<Address>& address);
         ~UdpListener();
 
         /**
@@ -22,9 +22,9 @@ namespace KapMirror::Sylph {
          */
         void start();
 
-        void sendTo(std::shared_ptr<Address> address, byte* buffer, int size);
+        void sendTo(const std::shared_ptr<Address>& address, byte* buffer, int size);
 
-        bool receiveFrom(std::shared_ptr<Address> address, int maxMessageSize, byte* buffer, int& size);
+        bool receiveFrom(const std::shared_ptr<Address>& address, int maxMessageSize, byte* buffer, int& size);
 
         bool isReadable() const;
 
@@ -32,4 +32,4 @@ namespace KapMirror::Sylph {
 
         void setBlocking(bool blocking);
     };
-}
+} // namespace KapMirror::Sylph

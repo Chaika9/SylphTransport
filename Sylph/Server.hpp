@@ -7,11 +7,12 @@
 #include <functional>
 #include <list>
 
-#define MTU_DEF 1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
+#define MTU_DEF                                                                                                                            \
+    1200 // default MTU (reduced to 1200 to fit all cases: https://en.wikipedia.org/wiki/Maximum_transmission_unit ; steam uses 1200 too!)
 
 namespace KapMirror::Sylph {
     class Server {
-        private:
+      private:
         std::shared_ptr<UdpListener> listener = nullptr;
 
         KapEngine::Dictionary<int, std::shared_ptr<ServerConnection>> connections;
@@ -19,7 +20,7 @@ namespace KapMirror::Sylph {
 
         byte rawReceiveBuffer[MTU_DEF];
 
-        public:
+      public:
         Server();
         ~Server();
 
@@ -33,14 +34,14 @@ namespace KapMirror::Sylph {
 
         void tick();
 
-        private:
+      private:
         void tickIncoming();
 
-        int getConnectionId(std::shared_ptr<Address> address);
+        int getConnectionId(const std::shared_ptr<Address>& address);
 
-        public:
-        std::function<void(Server&, int)> onConnected = nullptr;
-        std::function<void(Server&, int)> onDisconnected = nullptr;
+      public:
+        std::function<void(Server&, int)> onConnected                                 = nullptr;
+        std::function<void(Server&, int)> onDisconnected                              = nullptr;
         std::function<void(Server&, int, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
     };
-}
+} // namespace KapMirror::Sylph

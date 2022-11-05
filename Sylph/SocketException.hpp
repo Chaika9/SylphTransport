@@ -7,12 +7,9 @@ namespace KapMirror::Sylph {
     class SocketException : public std::exception {
         std::string _message;
 
-    public:
-        SocketException(std::string const &message) : _message(message) {}
-        ~SocketException() = default;
+      public:
+        explicit SocketException(std::string const& message) : _message(message) {}
 
-        char const *what() const noexcept {
-            return _message.c_str();
-        }
+        char const* what() const noexcept { return _message.c_str(); }
     };
-}
+} // namespace KapMirror::Sylph

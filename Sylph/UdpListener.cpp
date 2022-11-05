@@ -2,30 +2,22 @@
 
 using namespace KapMirror::Sylph;
 
-UdpListener::UdpListener(std::shared_ptr<Address> address) {
+UdpListener::UdpListener(const std::shared_ptr<Address>& address) {
     if (address == nullptr) {
         throw std::runtime_error("Address cannot be null");
     }
     socket = Socket::createSocket(address);
 }
 
-UdpListener::~UdpListener() {
-    socket->close();
-}
+UdpListener::~UdpListener() { socket->close(); }
 
-void UdpListener::close() {
-    socket->close();
-}
+void UdpListener::close() { socket->close(); }
 
-void UdpListener::start() {
-    socket->bind();
-}
+void UdpListener::start() { socket->bind(); }
 
-void UdpListener::sendTo(std::shared_ptr<Address> address, byte* buffer, int size) {
-    socket->sendTo(buffer, size, address);
-}
+void UdpListener::sendTo(const std::shared_ptr<Address>& address, byte* buffer, int size) { socket->sendTo(buffer, size, address); }
 
-bool UdpListener::receiveFrom(std::shared_ptr<Address> address, int maxMessageSize, byte* buffer, int& size) {
+bool UdpListener::receiveFrom(const std::shared_ptr<Address>& address, int maxMessageSize, byte* buffer, int& size) {
     size = socket->receiveFrom(buffer, maxMessageSize, address);
     if (size <= 0) {
         return false;
@@ -33,14 +25,8 @@ bool UdpListener::receiveFrom(std::shared_ptr<Address> address, int maxMessageSi
     return true;
 }
 
-bool UdpListener::isReadable() const {
-    return socket->isReadable();
-}
+bool UdpListener::isReadable() const { return socket->isReadable(); }
 
-bool UdpListener::isWritable() const {
-    return socket->isWritable();
-}
+bool UdpListener::isWritable() const { return socket->isWritable(); }
 
-void UdpListener::setBlocking(bool blocking) {
-    socket->setBlocking(blocking);
-}
+void UdpListener::setBlocking(bool blocking) { socket->setBlocking(blocking); }

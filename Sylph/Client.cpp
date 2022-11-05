@@ -3,13 +3,9 @@
 
 using namespace KapMirror::Sylph;
 
-Client::Client() {
-    connected = false;
-}
+Client::Client() { connected = false; }
 
-Client::~Client() {
-    dispose();
-}
+Client::~Client() { dispose(); }
 
 void Client::dispose() {
     connected = false;
@@ -18,13 +14,11 @@ void Client::dispose() {
     }
 
     // clean values
-    client = nullptr;
+    client     = nullptr;
     connection = nullptr;
 }
 
-bool Client::isConnected() const {
-    return connected;
-}
+bool Client::isConnected() const { return connected; }
 
 void Client::connect(std::string ip, int port) {
     if (connected) {
@@ -37,8 +31,8 @@ void Client::connect(std::string ip, int port) {
     }
 
     auto address = Address::createAddress(ip, port, KapMirror::Sylph::Address::SocketType::UDP);
-    client = std::make_shared<UdpClient>(address);
-    connection = std::make_shared<ClientConnection>(address, client);
+    client       = std::make_shared<UdpClient>(address);
+    connection   = std::make_shared<ClientConnection>(address, client);
 
     connection->onAuthenticated = [this](Connection& con) {
         connected = true;
@@ -79,9 +73,7 @@ void Client::send(std::shared_ptr<ArraySegment<byte>> message) {
     }
 }
 
-void Client::tick() {
-    tickIncoming();
-}
+void Client::tick() { tickIncoming(); }
 
 void Client::tickIncoming() {
     if (!connected || connection == nullptr) {
@@ -95,13 +87,12 @@ void Client::tickIncoming() {
                 if (msgLength <= MTU_DEF) {
                     connection->rawInput(rawReceiveBuffer, msgLength);
                 } else {
-                    std::cerr << "Client: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF << ". The excess was silently dropped. Disconnecting.";
+                    std::cerr << "Client: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF
+                              << ". The excess was silently dropped. Disconnecting.";
                     disconnect();
                 }
             }
-        } catch (SocketException& e) {
-            std::cerr << "Client: Exception=" << e.what() << std::endl;
-        }
+        } catch (SocketException& e) { std::cerr << "Client: Exception=" << e.what() << std::endl; }
     }
 
     connection->tick();

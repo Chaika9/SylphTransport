@@ -6,19 +6,16 @@
 
 namespace KapMirror::Sylph {
     class Address {
-        public:
-        enum class SocketType {
-            TCP = SOCK_STREAM,
-            UDP = SOCK_DGRAM
-        };
+      public:
+        enum class SocketType { TCP = SOCK_STREAM, UDP = SOCK_DGRAM };
 
-        private:
-        addrinfo *address = nullptr;
+      private:
+        addrinfo* address = nullptr;
 
-        public:
+      public:
         Address();
         Address(std::string host, int port, SocketType type = SocketType::TCP);
-        Address(int port, bool passive = true, SocketType type = SocketType::TCP);
+        explicit Address(int port, bool passive = true, SocketType type = SocketType::TCP);
         ~Address();
 
         /**
@@ -26,9 +23,7 @@ namespace KapMirror::Sylph {
          *
          * @return addrinfo*
          */
-        addrinfo* getAddress() const {
-            return address;
-        }
+        addrinfo* getAddress() const { return address; }
 
         std::string toString() const;
 
@@ -38,4 +33,4 @@ namespace KapMirror::Sylph {
 
         static std::shared_ptr<Address> createAddress(int port, bool passive = true, SocketType type = SocketType::TCP);
     };
-}
+} // namespace KapMirror::Sylph

@@ -3,9 +3,6 @@
 
 using namespace KapMirror;
 
-SylphTransport::SylphTransport() {
-}
-
 SylphTransport::~SylphTransport() {
     if (server != nullptr) {
         server->close();
@@ -34,9 +31,7 @@ void SylphTransport::createClient() {
     };
 }
 
-bool SylphTransport::clientConnected() {
-    return client != nullptr && client->isConnected();
-}
+bool SylphTransport::clientConnected() { return client != nullptr && client->isConnected(); }
 
 void SylphTransport::clientConnect(std::string ip, int port) {
     createClient();

@@ -3,12 +3,9 @@
 
 using namespace KapMirror::Sylph;
 
-Server::Server() {
-}
+Server::Server() {}
 
-Server::~Server() {
-    close();
-}
+Server::~Server() { close(); }
 
 void Server::close() {
     if (listener != nullptr) {
@@ -23,7 +20,7 @@ void Server::start(int port) {
     }
 
     auto address = std::make_shared<Address>(port, false, KapMirror::Sylph::Address::SocketType::UDP);
-    listener = std::make_shared<UdpListener>(address);
+    listener     = std::make_shared<UdpListener>(address);
 
     try {
         listener->start();
@@ -47,15 +44,13 @@ void Server::send(int connectionId, std::shared_ptr<ArraySegment<byte>> message)
     }
 }
 
-void Server::tick() {
-    tickIncoming();
-}
+void Server::tick() { tickIncoming(); }
 
 void Server::tickIncoming() {
     while (listener->isReadable()) {
         try {
             auto clientAddress = Address::createAddress();
-            int msgLength = 0;
+            int msgLength      = 0;
             int connectionId;
             if (listener->receiveFrom(clientAddress, MTU_DEF, rawReceiveBuffer, msgLength)) {
                 connectionId = getConnectionId(clientAddress);
@@ -95,7 +90,8 @@ void Server::tickIncoming() {
                         connection->rawInput(rawReceiveBuffer, msgLength);
                     }
                 } else {
-                    std::cerr << "Server: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF << ". The excess was silently dropped. Disconnecting connectionId=" << connectionId << ".";
+                    std::cerr << "Server: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF
+                              << ". The excess was silently dropped. Disconnecting connectionId=" << connectionId << ".";
                     disconnect(connectionId);
                 }
             }
@@ -115,6 +111,4 @@ void Server::tickIncoming() {
     }
 }
 
-int Server::getConnectionId(std::shared_ptr<Address> address) {
-    return (int) std::hash<std::string>()(address->toString());
-}
+int Server::getConnectionId(const std::shared_ptr<Address>& address) { return (int)std::hash<std::string>()(address->toString()); }

@@ -5,13 +5,13 @@
 
 namespace KapMirror::Sylph {
     class ServerConnection : public Connection {
-        private:
+      private:
         std::shared_ptr<UdpListener> listener;
 
-        public:
+      public:
         ServerConnection(int _connectionId, std::shared_ptr<Address> _address, std::shared_ptr<UdpListener> _listener);
 
-        protected:
+      protected:
         void rawSend(MessageType type, byte* buffer, int msgLength) override;
     };
-}
+} // namespace KapMirror::Sylph

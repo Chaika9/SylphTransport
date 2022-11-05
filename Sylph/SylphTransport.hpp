@@ -6,13 +6,13 @@
 
 namespace KapMirror {
     class SylphTransport : public Transport {
-        private:
+      private:
         std::shared_ptr<Sylph::Client> client;
         std::shared_ptr<Sylph::Server> server;
 
-        public:
-        SylphTransport();
-        ~SylphTransport();
+      public:
+        SylphTransport() = default;
+        ~SylphTransport() override;
 
         bool clientConnected() override;
 
@@ -34,7 +34,7 @@ namespace KapMirror {
 
         void serverEarlyUpdate() override;
 
-        private:
+      private:
         void createClient();
     };
-}
+} // namespace KapMirror

@@ -13,9 +13,9 @@
 #include <iphlpapi.h>
 
 // Link to winsock2 libraries
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Mswsock.lib")
+#pragma comment(lib, "AdvApi32.lib")
 
 #define SocketLastError errno
 
@@ -30,14 +30,14 @@
 #include <sys/ioctl.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <errno.h>
+#include <cerrno>
 
 #define SOCKET int
-#define INVALID_SOCKET  (SOCKET)(~0)
-#define SOCKET_ERROR            (-1)
-#define SD_RECEIVE              0x00
-#define SD_SEND                 0x01
-#define SD_BOTH                 0x02
-#define SocketLastError         errno
+#define INVALID_SOCKET (SOCKET)(~0)
+#define SOCKET_ERROR (-1)
+#define SD_RECEIVE 0x00
+#define SD_SEND 0x01
+#define SD_BOTH 0x02
+#define SocketLastError errno
 
 #endif

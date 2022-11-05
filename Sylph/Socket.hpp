@@ -8,12 +8,12 @@
 
 namespace KapMirror::Sylph {
     class Socket {
-        private:
+      private:
         std::shared_ptr<Address> address;
         int socket_fd;
 
-        public:
-        Socket(std::shared_ptr<Address> _address);
+      public:
+        explicit Socket(std::shared_ptr<Address> _address);
         Socket(std::shared_ptr<Address> _address, SOCKET _socket_fd);
         ~Socket();
 
@@ -32,7 +32,7 @@ namespace KapMirror::Sylph {
         /**
          * @brief Listen for incoming connections
          */
-        void listen();
+        void listen() const;
 
         /**
          * @brief Connect to remote
@@ -46,14 +46,14 @@ namespace KapMirror::Sylph {
          */
         std::shared_ptr<Socket> accept();
 
-        void setBlocking(bool blocking);
+        void setBlocking(bool blocking) const;
 
         /**
          * @brief Send data to remote
          *
          * @param data The data to send
          */
-        void send(byte* buffer, int size, uint32_t flags = 0);
+        void send(byte* buffer, int size, uint32_t flags = 0) const;
 
         /**
          * @brief Send data to remote
@@ -61,7 +61,7 @@ namespace KapMirror::Sylph {
          * @param data The data to receive
          * @param address The address to send to
          */
-        void sendTo(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags = 0);
+        void sendTo(byte* buffer, int size, const std::shared_ptr<Address>& address, uint32_t flags = 0) const;
 
         /**
          * @brief Receive data from remote
@@ -71,7 +71,7 @@ namespace KapMirror::Sylph {
          *
          * @return int The number of bytes received
          */
-        int receive(byte* buffer, int size, uint32_t flags = 0);
+        int receive(byte* buffer, int size, uint32_t flags = 0) const;
 
         /**
          * @brief Receive data from remote
@@ -82,7 +82,7 @@ namespace KapMirror::Sylph {
          *
          * @return int The number of bytes received
          */
-        int receiveFrom(byte* buffer, int size, std::shared_ptr<Address> address, uint32_t flags = 0);
+        int receiveFrom(byte* buffer, int size, const std::shared_ptr<Address>& address, uint32_t flags = 0) const;
 
         bool isInvalid() const;
 
@@ -90,8 +90,8 @@ namespace KapMirror::Sylph {
 
         bool isWritable() const;
 
-        static std::shared_ptr<Socket> createSocket(std::shared_ptr<Address> address);
+        static std::shared_ptr<Socket> createSocket(const std::shared_ptr<Address>& address);
 
-        static std::shared_ptr<Socket> createSocket(std::shared_ptr<Address> address, SOCKET socket_fd);
+        static std::shared_ptr<Socket> createSocket(const std::shared_ptr<Address>& address, SOCKET socket_fd);
     };
-}
+} // namespace KapMirror::Sylph

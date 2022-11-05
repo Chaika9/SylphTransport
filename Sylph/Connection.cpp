@@ -4,14 +4,13 @@
 
 using namespace KapMirror::Sylph;
 
-Connection::Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout) : connectionId(_connectionId), address(_address), timeout(_timeout) {
-    state = ConnectionState::Connected;
+Connection::Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout)
+    : connectionId(_connectionId), address(_address), timeout(_timeout) {
+    state           = ConnectionState::Connected;
     lastReceiveTime = NetworkTime::localTime();
 }
 
-int Connection::getConnectionId() const {
-    return connectionId;
-}
+int Connection::getConnectionId() const { return connectionId; }
 
 void Connection::disconnect() {
     if (state == ConnectionState::Disconnected) {
@@ -58,7 +57,7 @@ void Connection::rawInput(byte* buffer, int msgLength) {
         return;
     }
 
-    byte type = buffer[0];
+    byte type    = buffer[0];
     auto message = ArraySegment<byte>::createArraySegment(buffer, 1, msgLength);
 
     if (state == ConnectionState::Connected) {
@@ -91,7 +90,7 @@ void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegmen
     switch (type) {
         case MessageType::Handshake: {
             std::cout << "Connection: received handshake" << std::endl;
-            state = ConnectionState::Authenticated;
+            state           = ConnectionState::Authenticated;
             lastReceiveTime = NetworkTime::localTime();
 
             if (onAuthenticated != nullptr) {
@@ -102,7 +101,8 @@ void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegmen
         case MessageType::Ping:
         case MessageType::Data:
         case MessageType::Disconnect: {
-            std::cout << "Connection: received invalid type " << (int)type << " while Connected. Disconnecting the connection." << std::endl;
+            std::cout << "Connection: received invalid type " << (int)type << " while Connected. Disconnecting the connection."
+                      << std::endl;
             disconnect();
             break;
         }
@@ -112,7 +112,8 @@ void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegmen
 void Connection::handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySegment<byte>> message) {
     switch (type) {
         case MessageType::Handshake: {
-            std::cout << "Connection: received invalid type " << (int)type << " while Authenticated. Disconnecting the connection." << std::endl;
+            std::cout << "Connection: received invalid type " << (int)type << " while Authenticated. Disconnecting the connection."
+                      << std::endl;
             disconnect();
             break;
         }
@@ -147,18 +148,14 @@ void Connection::handlePing(long long time) {
     }
 }
 
-
 void Connection::handleTimeout(long long time) {
     if (time >= lastReceiveTime + timeout) {
-        std::cout << "Connection: Connection timed out after not receiving any message for " << timeout << "ms. Disconnecting." << std::endl;
+        std::cout << "Connection: Connection timed out after not receiving any message for " << timeout << "ms. Disconnecting."
+                  << std::endl;
         disconnect();
     }
 }
 
-void Connection::sendDisconnect() {
-    rawSend(MessageType::Disconnect, nullptr, 0);
-}
+void Connection::sendDisconnect() { rawSend(MessageType::Disconnect, nullptr, 0); }
 
-void Connection::sendPing() {
-    rawSend(MessageType::Ping, nullptr, 0);
-}
+void Connection::sendPing() { rawSend(MessageType::Ping, nullptr, 0); }
