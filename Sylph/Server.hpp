@@ -30,7 +30,7 @@ namespace KapMirror::Sylph {
 
         void disconnect(int connectionId);
 
-        void send(int connectionId, std::shared_ptr<ArraySegment<byte>> message);
+        void send(int connectionId, const std::shared_ptr<ArraySegment<byte>>& message);
 
         void tick();
 
@@ -40,8 +40,8 @@ namespace KapMirror::Sylph {
         int getConnectionId(const std::shared_ptr<Address>& address);
 
       public:
-        std::function<void(Server&, int)> onConnected                                 = nullptr;
-        std::function<void(Server&, int)> onDisconnected                              = nullptr;
+        std::function<void(Server&, int)> onConnected = nullptr;
+        std::function<void(Server&, int)> onDisconnected = nullptr;
         std::function<void(Server&, int, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
     };
 } // namespace KapMirror::Sylph

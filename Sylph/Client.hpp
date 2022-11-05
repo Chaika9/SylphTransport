@@ -13,7 +13,7 @@ namespace KapMirror::Sylph {
       private:
         bool connected;
 
-        std::shared_ptr<UdpClient> client            = nullptr;
+        std::shared_ptr<UdpClient> client = nullptr;
         std::shared_ptr<ClientConnection> connection = nullptr;
 
         byte rawReceiveBuffer[MTU_DEF] = {0};
@@ -24,11 +24,11 @@ namespace KapMirror::Sylph {
 
         bool isConnected() const;
 
-        void connect(std::string ip, int port);
+        void connect(const std::string& ip, int port);
 
         void disconnect();
 
-        void send(std::shared_ptr<ArraySegment<byte>> message);
+        void send(const std::shared_ptr<ArraySegment<byte>>& message);
 
         void tick();
 
@@ -38,8 +38,8 @@ namespace KapMirror::Sylph {
         void tickIncoming();
 
       public:
-        std::function<void(Client&)> onConnected                                 = nullptr;
-        std::function<void(Client&)> onDisconnected                              = nullptr;
-        std::function<void(Client&, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
+        std::function<void(Client&)> onConnected = nullptr;
+        std::function<void(Client&)> onDisconnected = nullptr;
+        std::function<void(Client&, const std::shared_ptr<ArraySegment<byte>>&)> onData = nullptr;
     };
 } // namespace KapMirror::Sylph

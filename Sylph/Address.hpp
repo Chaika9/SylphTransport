@@ -14,7 +14,7 @@ namespace KapMirror::Sylph {
 
       public:
         Address();
-        Address(std::string host, int port, SocketType type = SocketType::TCP);
+        Address(const std::string& host, int port, SocketType type = SocketType::TCP);
         explicit Address(int port, bool passive = true, SocketType type = SocketType::TCP);
         ~Address();
 
@@ -29,7 +29,7 @@ namespace KapMirror::Sylph {
 
         static std::shared_ptr<Address> createAddress();
 
-        static std::shared_ptr<Address> createAddress(std::string host, int port, SocketType type = SocketType::TCP);
+        static std::shared_ptr<Address> createAddress(const std::string& host, int port, SocketType type = SocketType::TCP);
 
         static std::shared_ptr<Address> createAddress(int port, bool passive = true, SocketType type = SocketType::TCP);
     };

@@ -56,15 +56,15 @@ void Socket::close() {
 
 void Socket::bind() {
     addrinfo* addr = address->getAddress();
-    int status     = ::bind(socket_fd, addr->ai_addr, addr->ai_addrlen);
-    int lastError  = SocketLastError;
+    int status = ::bind(socket_fd, addr->ai_addr, addr->ai_addrlen);
+    int lastError = SocketLastError;
     if (status == SOCKET_ERROR && lastError != EWOULDBLOCK && lastError != EAGAIN && lastError != EINPROGRESS) {
         throw SocketException("Socket bind error");
     }
 }
 
 void Socket::listen() const {
-    int status    = ::listen(socket_fd, SOMAXCONN);
+    int status = ::listen(socket_fd, SOMAXCONN);
     int lastError = SocketLastError;
     if (status == SOCKET_ERROR && lastError != EWOULDBLOCK && lastError != EAGAIN && lastError != EINPROGRESS) {
         throw SocketException("Socket listen error");
@@ -77,7 +77,7 @@ void Socket::connect() {
     }
 
     addrinfo* addr = address->getAddress();
-    int status     = ::connect(socket_fd, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
+    int status = ::connect(socket_fd, addr->ai_addr, static_cast<int>(addr->ai_addrlen));
     if (status == 0) {
         return;
     }
@@ -100,7 +100,7 @@ void Socket::setBlocking(bool blocking) const {
 #ifdef __WINDOWS__
     int status = ioctlsocket(socket_fd, FIONBIO, &mode);
 #else
-    int status    = ioctl(socket_fd, FIONBIO, (char*)&mode);
+    int status = ioctl(socket_fd, FIONBIO, (char*)&mode);
 #endif
     if (status == SOCKET_ERROR) {
         throw SocketException("Socket set blocking error");
@@ -111,7 +111,7 @@ void Socket::send(byte* buffer, int size, uint32_t flags) const {
 #ifdef __WINDOWS__
     int status = ::send(socket_fd, (const char*)buffer, size, flags);
 #else
-    int status    = ::send(socket_fd, buffer, size, flags);
+    int status = ::send(socket_fd, buffer, size, flags);
 #endif
     if (status == SOCKET_ERROR || status <= 0) {
         throw SocketException("Socket send error");
@@ -123,7 +123,7 @@ void Socket::sendTo(byte* buffer, int size, const std::shared_ptr<Address>& addr
 #ifdef __WINDOWS__
     int status = ::sendto(socket_fd, (const char*)buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
 #else
-    int status    = ::sendto(socket_fd, buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
+    int status = ::sendto(socket_fd, buffer, size, flags, addr->ai_addr, addr->ai_addrlen);
 #endif
     if (status == SOCKET_ERROR || status <= 0) {
         throw SocketException("Socket send error");
@@ -143,7 +143,7 @@ int Socket::receive(byte* buffer, int size, uint32_t flags) const {
 }
 
 int Socket::receiveFrom(byte* buffer, int size, const std::shared_ptr<Address>& address, uint32_t flags) const {
-    sockaddr addr      = {0};
+    sockaddr addr = {0};
     socklen_t addr_len = sizeof(sockaddr);
 #ifdef __WINDOWS__
     auto received = ::recvfrom(socket_fd, (char*)buffer, size, flags, &addr, &addr_len);
@@ -167,7 +167,7 @@ bool Socket::isInvalid() const {
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
     timeval timeout = {0, 1000};
-    int status      = ::select(static_cast<int>(socket_fd + 1), nullptr, nullptr, &set, &timeout);
+    int status = ::select(static_cast<int>(socket_fd + 1), nullptr, nullptr, &set, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }
@@ -183,7 +183,7 @@ bool Socket::isReadable() const {
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
     timeval timeout = {0, 1000};
-    int status      = ::select(static_cast<int>(socket_fd + 1), &set, nullptr, nullptr, &timeout);
+    int status = ::select(static_cast<int>(socket_fd + 1), &set, nullptr, nullptr, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }
@@ -199,7 +199,7 @@ bool Socket::isWritable() const {
     FD_ZERO(&set);
     FD_SET(socket_fd, &set);
     timeval timeout = {0, 1000};
-    int status      = ::select(static_cast<int>(socket_fd + 1), nullptr, &set, nullptr, &timeout);
+    int status = ::select(static_cast<int>(socket_fd + 1), nullptr, &set, nullptr, &timeout);
     if (status == SOCKET_ERROR) {
         return false;
     }

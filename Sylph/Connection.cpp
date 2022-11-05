@@ -6,7 +6,7 @@ using namespace KapMirror::Sylph;
 
 Connection::Connection(int _connectionId, std::shared_ptr<Address> _address, int _timeout)
     : connectionId(_connectionId), address(_address), timeout(_timeout) {
-    state           = ConnectionState::Connected;
+    state = ConnectionState::Connected;
     lastReceiveTime = NetworkTime::localTime();
 }
 
@@ -33,7 +33,7 @@ void Connection::disconnect() {
     std::cout << "Connection: Disposed." << std::endl;
 }
 
-void Connection::send(std::shared_ptr<ArraySegment<byte>> message) {
+void Connection::send(const std::shared_ptr<ArraySegment<byte>>& message) {
     if (message->getSize() <= 0) {
         std::cerr << "Connection: tried sending empty message. This should never happen. Disconnecting." << std::endl;
         disconnect();
@@ -57,7 +57,7 @@ void Connection::rawInput(byte* buffer, int msgLength) {
         return;
     }
 
-    byte type    = buffer[0];
+    byte type = buffer[0];
     auto message = ArraySegment<byte>::createArraySegment(buffer, 1, msgLength);
 
     if (state == ConnectionState::Connected) {
@@ -83,14 +83,16 @@ void Connection::tick() {
             handleTimeout(time);
             break;
         }
+        case Disconnected:
+            break;
     }
 }
 
-void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegment<byte>> message) {
+void Connection::handleOnConnected(MessageType type, const std::shared_ptr<ArraySegment<byte>>& message) {
     switch (type) {
         case MessageType::Handshake: {
             std::cout << "Connection: received handshake" << std::endl;
-            state           = ConnectionState::Authenticated;
+            state = ConnectionState::Authenticated;
             lastReceiveTime = NetworkTime::localTime();
 
             if (onAuthenticated != nullptr) {
@@ -109,7 +111,7 @@ void Connection::handleOnConnected(MessageType type, std::shared_ptr<ArraySegmen
     }
 }
 
-void Connection::handleOnAuthenticated(MessageType type, std::shared_ptr<ArraySegment<byte>> message) {
+void Connection::handleOnAuthenticated(MessageType type, const std::shared_ptr<ArraySegment<byte>>& message) {
     switch (type) {
         case MessageType::Handshake: {
             std::cout << "Connection: received invalid type " << (int)type << " while Authenticated. Disconnecting the connection."

@@ -14,13 +14,13 @@ void Client::dispose() {
     }
 
     // clean values
-    client     = nullptr;
+    client = nullptr;
     connection = nullptr;
 }
 
 bool Client::isConnected() const { return connected; }
 
-void Client::connect(std::string ip, int port) {
+void Client::connect(const std::string& ip, int port) {
     if (connected) {
         std::cerr << "Client: Sylph Client can not create connection because an existing connection is connected" << std::endl;
         return;
@@ -31,8 +31,8 @@ void Client::connect(std::string ip, int port) {
     }
 
     auto address = Address::createAddress(ip, port, KapMirror::Sylph::Address::SocketType::UDP);
-    client       = std::make_shared<UdpClient>(address);
-    connection   = std::make_shared<ClientConnection>(address, client);
+    client = std::make_shared<UdpClient>(address);
+    connection = std::make_shared<ClientConnection>(address, client);
 
     connection->onAuthenticated = [this](Connection& con) {
         connected = true;
@@ -42,7 +42,7 @@ void Client::connect(std::string ip, int port) {
         }
     };
 
-    connection->onData = [this](Connection& con, std::shared_ptr<ArraySegment<byte>> message) {
+    connection->onData = [this](Connection& con, const std::shared_ptr<ArraySegment<byte>>& message) {
         if (onData != nullptr) {
             onData(*this, message);
         }
@@ -65,7 +65,7 @@ void Client::disconnect() {
     }
 }
 
-void Client::send(std::shared_ptr<ArraySegment<byte>> message) {
+void Client::send(const std::shared_ptr<ArraySegment<byte>>& message) {
     if (connected) {
         connection->send(message);
     } else {
@@ -76,7 +76,7 @@ void Client::send(std::shared_ptr<ArraySegment<byte>> message) {
 void Client::tick() { tickIncoming(); }
 
 void Client::tickIncoming() {
-    if (!connected || connection == nullptr) {
+    if (connection == nullptr) {
         return;
     }
 

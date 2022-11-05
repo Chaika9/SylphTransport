@@ -20,7 +20,7 @@ void Server::start(int port) {
     }
 
     auto address = std::make_shared<Address>(port, false, KapMirror::Sylph::Address::SocketType::UDP);
-    listener     = std::make_shared<UdpListener>(address);
+    listener = std::make_shared<UdpListener>(address);
 
     try {
         listener->start();
@@ -37,7 +37,7 @@ void Server::disconnect(int connectionId) {
     }
 }
 
-void Server::send(int connectionId, std::shared_ptr<ArraySegment<byte>> message) {
+void Server::send(int connectionId, const std::shared_ptr<ArraySegment<byte>>& message) {
     std::shared_ptr<ServerConnection> connection;
     if (connections.tryGetValue(connectionId, connection)) {
         connection->send(message);
@@ -50,7 +50,7 @@ void Server::tickIncoming() {
     while (listener->isReadable()) {
         try {
             auto clientAddress = Address::createAddress();
-            int msgLength      = 0;
+            int msgLength = 0;
             int connectionId;
             if (listener->receiveFrom(clientAddress, MTU_DEF, rawReceiveBuffer, msgLength)) {
                 connectionId = getConnectionId(clientAddress);
@@ -70,7 +70,7 @@ void Server::tickIncoming() {
                             }
                         };
 
-                        connection->onData = [this](Connection& con, std::shared_ptr<ArraySegment<byte>> message) {
+                        connection->onData = [this](Connection& con, const std::shared_ptr<ArraySegment<byte>>& message) {
                             if (onData != nullptr) {
                                 onData(*this, con.getConnectionId(), message);
                             }

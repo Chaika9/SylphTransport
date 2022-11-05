@@ -4,7 +4,7 @@ Standard: c++20
 BasedOnStyle: LLVM
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
-AlignConsecutiveAssignments: AcrossComments
+AlignConsecutiveAssignments: false
 AlignOperands: true
 AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: true
@@ -47,11 +47,14 @@ DisableFormat: false
 ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
 IncludeCategories:
-  - Priority: 2
+  -
+    Priority: 2
     Regex: ^"(llvm|llvm-c|clang|clang-c)/
-  - Priority: 3
+  -
+    Priority: 3
     Regex: ^(<|"(gtest|isl|json)/)
-  - Priority: 1
+  -
+    Priority: 1
     Regex: .*
 IndentCaseLabels: true
 IndentWrappedFunctionNames: false
@@ -73,7 +76,7 @@ PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Left
 ReflowComments: true
-SortIncludes: Never
+SortIncludes: false
 SortUsingDeclarations: false
 SpaceAfterCStyleCast: false
 SpaceBeforeAssignmentOperators: true

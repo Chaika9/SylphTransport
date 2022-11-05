@@ -12,9 +12,9 @@ Address::Address() {
     std::memset(address->ai_addr, 0, sizeof(sockaddr));
 }
 
-Address::Address(std::string host, int port, SocketType type) {
-    addrinfo hints    = {0};
-    hints.ai_family   = AF_INET; // Note: Windows fails to connect if left unspecified
+Address::Address(const std::string& host, int port, SocketType type) {
+    addrinfo hints = {0};
+    hints.ai_family = AF_INET; // Note: Windows fails to connect if left unspecified
     hints.ai_socktype = (int)type;
 
     int status = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &address);
@@ -24,8 +24,8 @@ Address::Address(std::string host, int port, SocketType type) {
 }
 
 Address::Address(int port, bool passive, SocketType type) {
-    addrinfo hints    = {0};
-    hints.ai_family   = AF_INET; // Note: Windows fails to connect if left unspecified
+    addrinfo hints = {0};
+    hints.ai_family = AF_INET; // Note: Windows fails to connect if left unspecified
     hints.ai_socktype = (int)type;
     if (passive) {
         hints.ai_flags = AI_PASSIVE;
@@ -58,7 +58,7 @@ std::string Address::toString() const {
 
 std::shared_ptr<Address> Address::createAddress() { return std::make_shared<Address>(); }
 
-std::shared_ptr<Address> Address::createAddress(std::string host, int port, SocketType type) {
+std::shared_ptr<Address> Address::createAddress(const std::string& host, int port, SocketType type) {
     return std::make_shared<Address>(host, port, type);
 }
 
