@@ -1,7 +1,8 @@
-[![KapEngine](https://img.shields.io/badge/KapEngine-brightgreen.svg)](https://github.com/benji-35/KapEngine/)
 [![KapMirror](https://img.shields.io/badge/KapMirror-brightgreen.svg)](https://github.com/Chaika9/KapMirror/)
+[![Release](https://img.shields.io/github/release/Chaika9/SylphTransport.svg)](https://github.com/Chaika9/SylphTransport/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/vis2k/Mirror/blob/master/LICENSE)
 
-<img src="Images/Sylph.png" title="Sylph"/>
+<img src="Images/Sylph.png" title="Sylph" alt="Image"/>
 
 ~~ Like UDP, the wind carries information, but sometimes it gets lost.
 

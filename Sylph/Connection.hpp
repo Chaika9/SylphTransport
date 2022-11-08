@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Address.hpp"
-#include "KapMirror/Runtime/ArraySegment.hpp"
-#include "KapMirror/Runtime/NetworkWriter.hpp"
+#include "KapMirror/Core/ArraySegment.hpp"
+#include "KapMirror/Core/NetworkWriter.hpp"
 #include <functional>
 
 #define PING_INTERVAL 1000

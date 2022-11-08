@@ -2,7 +2,7 @@
 
 #include "UdpListener.hpp"
 #include "ServerConnection.hpp"
-#include "KapMirror/Runtime/ArraySegment.hpp"
+#include "KapMirror/Core/ArraySegment.hpp"
 #include "Dictionary.hpp"
 #include <functional>
 #include <list>

@@ -2,7 +2,7 @@
 
 #include "UdpClient.hpp"
 #include "ClientConnection.hpp"
-#include "KapMirror/Runtime/ArraySegment.hpp"
+#include "KapMirror/Core/ArraySegment.hpp"
 #include <functional>
 
 #define MTU_DEF                                                                                                                            \

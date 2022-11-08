@@ -33,7 +33,7 @@ void SylphTransport::createClient() {
 
 bool SylphTransport::clientConnected() { return client != nullptr && client->isConnected(); }
 
-void SylphTransport::clientConnect(std::string ip, int port) {
+void SylphTransport::clientConnect(const std::string& ip, int port) {
     createClient();
     client->connect(ip, port);
 }

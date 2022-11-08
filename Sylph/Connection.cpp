@@ -1,5 +1,5 @@
 #include "Connection.hpp"
-#include "KapMirror/Runtime/NetworkTime.hpp"
+#include "KapMirror/Core/NetworkTime.hpp"
 #include <iostream>
 
 using namespace KapMirror::Sylph;

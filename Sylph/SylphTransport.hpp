@@ -1,6 +1,6 @@
 #pragma once
 
-#include "KapMirror/Runtime/Transport.hpp"
+#include "KapMirror/Core/Transport.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
 
@@ -16,7 +16,7 @@ namespace KapMirror {
 
         bool clientConnected() override;
 
-        void clientConnect(std::string ip, int port) override;
+        void clientConnect(const std::string& ip, int port) override;
 
         void clientDisconnect() override;
 

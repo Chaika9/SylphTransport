@@ -2,7 +2,7 @@
 
 #include "Internal.hpp"
 #include "Address.hpp"
-#include "KapMirror/Runtime/ArraySegment.hpp"
+#include "KapMirror/Core/ArraySegment.hpp"
 #include <memory>
 #include <string>
 

@@ -2,7 +2,7 @@
 
 #include "Socket.hpp"
 #include "SocketException.hpp"
-#include "KapMirror/Runtime/ArraySegment.hpp"
+#include "KapMirror/Core/ArraySegment.hpp"
 
 namespace KapMirror::Sylph {
     class UdpClient {
