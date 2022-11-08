@@ -1,5 +1,6 @@
 #include "Client.hpp"
-#include <iostream>
+#include "Debug.hpp"
+#include <cstring>
 
 using namespace KapMirror::Sylph;
 
@@ -22,7 +23,7 @@ bool Client::isConnected() const { return connected; }
 
 void Client::connect(const std::string& ip, int port) {
     if (connected) {
-        std::cerr << "Client: Sylph Client can not create connection because an existing connection is connected" << std::endl;
+        KapEngine::Debug::error("Client: Sylph Client can not create connection because an existing connection is connected!");
         return;
     }
 
@@ -49,18 +50,20 @@ void Client::connect(const std::string& ip, int port) {
     };
 
     connection->onDisconnected = [this](Connection& con) {
-        dispose();
-
         if (onDisconnected != nullptr) {
             onDisconnected(*this);
         }
+
+        // Clean up
+        connected = false;
+        client->close();
     };
 
     connection->connect();
 }
 
 void Client::disconnect() {
-    if (connected) {
+    if (connected && connection != nullptr) {
         connection->disconnect();
     }
 }
@@ -69,7 +72,7 @@ void Client::send(const std::shared_ptr<ArraySegment<byte>>& message) {
     if (connected) {
         connection->send(message);
     } else {
-        std::cerr << "Client: can't send because client not connected!" << std::endl;
+        KapEngine::Debug::error("Client: can't send because client not connected!");
     }
 }
 
@@ -82,17 +85,20 @@ void Client::tickIncoming() {
 
     while (client->isReadable()) {
         try {
+            // Clean buffer
+            std::memset(rawReceiveBuffer, 0, MTU_DEF);
+
             int msgLength = 0;
             if (client->receive(MTU_DEF, rawReceiveBuffer, msgLength)) {
                 if (msgLength <= MTU_DEF) {
                     connection->rawInput(rawReceiveBuffer, msgLength);
                 } else {
-                    std::cerr << "Client: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF
-                              << ". The excess was silently dropped. Disconnecting.";
+                    KapEngine::Debug::error("Client: message of size " + std::to_string(msgLength) + " does not fit into buffer of size " +
+                                            std::to_string(MTU_DEF) + ". The excess was silently dropped. Disconnecting.");
                     disconnect();
                 }
             }
-        } catch (SocketException& e) { std::cerr << "Client: Exception=" << e.what() << std::endl; }
+        } catch (SocketException& e) { KapEngine::Debug::error("Client: Exception=" + std::string(e.what())); }
     }
 
     connection->tick();

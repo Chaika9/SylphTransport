@@ -1,9 +1,8 @@
 #include "Server.hpp"
-#include <iostream>
+#include "Debug.hpp"
+#include <cstring>
 
 using namespace KapMirror::Sylph;
-
-Server::Server() {}
 
 Server::~Server() { close(); }
 
@@ -25,7 +24,7 @@ void Server::start(int port) {
     try {
         listener->start();
     } catch (SocketException& e) {
-        std::cerr << "Server: Exception=" << e.what() << std::endl;
+        KapEngine::Debug::error("Server: Failed to start listener: " + std::string(e.what()));
         return;
     }
 }
@@ -49,6 +48,9 @@ void Server::tick() { tickIncoming(); }
 void Server::tickIncoming() {
     while (listener->isReadable()) {
         try {
+            // Clean buffer
+            std::memset(rawReceiveBuffer, 0, MTU_DEF);
+
             auto clientAddress = Address::createAddress();
             int msgLength = 0;
             int connectionId;
@@ -58,7 +60,7 @@ void Server::tickIncoming() {
                 if (msgLength <= MTU_DEF) {
                     std::shared_ptr<ServerConnection> connection;
                     if (!connections.tryGetValue(connectionId, connection)) {
-                        std::cout << "Server: New connection" << std::endl;
+                        KapEngine::Debug::log("Server: New connection from " + clientAddress->toString());
 
                         connection = std::make_shared<ServerConnection>(connectionId, clientAddress, listener);
 
@@ -85,18 +87,18 @@ void Server::tickIncoming() {
                         };
 
                         connections[connectionId] = connection;
-                        connection->rawInput(rawReceiveBuffer, msgLength);
-                    } else {
-                        connection->rawInput(rawReceiveBuffer, msgLength);
                     }
+
+                    connection->rawInput(rawReceiveBuffer, msgLength);
                 } else {
-                    std::cerr << "Server: message of size " << msgLength << " does not fit into buffer of size " << MTU_DEF
-                              << ". The excess was silently dropped. Disconnecting connectionId=" << connectionId << ".";
+                    KapEngine::Debug::error("Server: message of size " + std::to_string(msgLength) + " does not fit into buffer of size " +
+                                            std::to_string(MTU_DEF) + ". The excess was silently dropped. Disconnecting connectionId=" +
+                                            std::to_string(connectionId) + ".");
                     disconnect(connectionId);
                 }
             }
         } catch (SocketException& e) {
-            std::cerr << "Server: Exception=" << e.what() << std::endl;
+            KapEngine::Debug::error("Server: Exception=" + std::string(e.what()));
             return;
         }
     }

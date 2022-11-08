@@ -21,7 +21,7 @@ namespace KapMirror::Sylph {
         byte rawReceiveBuffer[MTU_DEF];
 
       public:
-        Server();
+        Server() = default;
         ~Server();
 
         void close();

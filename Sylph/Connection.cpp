@@ -1,6 +1,6 @@
 #include "Connection.hpp"
 #include "KapMirror/Core/NetworkTime.hpp"
-#include <iostream>
+#include "Debug.hpp"
 
 using namespace KapMirror::Sylph;
 
@@ -23,19 +23,19 @@ void Connection::disconnect() {
         // this is ok, the connection was already closed
     }
 
-    std::cout << "Connection: Disconnected." << std::endl;
+    KapEngine::Debug::log("Connection: Disconnected.");
     state = ConnectionState::Disconnected;
 
     if (onDisconnected != nullptr) {
         onDisconnected(*this);
     }
 
-    std::cout << "Connection: Disposed." << std::endl;
+    KapEngine::Debug::log("Connection: Disposed.");
 }
 
 void Connection::send(const std::shared_ptr<ArraySegment<byte>>& message) {
     if (message->getSize() <= 0) {
-        std::cerr << "Connection: tried sending empty message. This should never happen. Disconnecting." << std::endl;
+        KapEngine::Debug::error("Connection: tried sending empty message. This should never happen. Disconnecting.");
         disconnect();
         return;
     }
@@ -44,7 +44,7 @@ void Connection::send(const std::shared_ptr<ArraySegment<byte>>& message) {
 }
 
 void Connection::sendHandshake() {
-    std::cout << "Connection: sending Handshake to other end!" << std::endl;
+    KapEngine::Debug::log("Connection: Sending handshake.");
     rawSend(MessageType::Handshake, nullptr, 0);
 }
 
@@ -91,7 +91,7 @@ void Connection::tick() {
 void Connection::handleOnConnected(MessageType type, const std::shared_ptr<ArraySegment<byte>>& message) {
     switch (type) {
         case MessageType::Handshake: {
-            std::cout << "Connection: received handshake" << std::endl;
+            KapEngine::Debug::log("Connection: Handshake received.");
             state = ConnectionState::Authenticated;
             lastReceiveTime = NetworkTime::localTime();
 
@@ -103,8 +103,7 @@ void Connection::handleOnConnected(MessageType type, const std::shared_ptr<Array
         case MessageType::Ping:
         case MessageType::Data:
         case MessageType::Disconnect: {
-            std::cout << "Connection: received invalid type " << (int)type << " while Connected. Disconnecting the connection."
-                      << std::endl;
+            KapEngine::Debug::error("Connection: Received unexpected message type. Disconnecting.");
             disconnect();
             break;
         }
@@ -114,8 +113,8 @@ void Connection::handleOnConnected(MessageType type, const std::shared_ptr<Array
 void Connection::handleOnAuthenticated(MessageType type, const std::shared_ptr<ArraySegment<byte>>& message) {
     switch (type) {
         case MessageType::Handshake: {
-            std::cout << "Connection: received invalid type " << (int)type << " while Authenticated. Disconnecting the connection."
-                      << std::endl;
+            KapEngine::Debug::error("Connection: Received unexpected message type " + std::to_string(type) +
+                                    ". while Authenticated. Disconnecting.");
             disconnect();
             break;
         }
@@ -130,13 +129,13 @@ void Connection::handleOnAuthenticated(MessageType type, const std::shared_ptr<A
                     onData(*this, message);
                 }
             } else {
-                std::cout << "Connection: received empty Data message while Authenticated. Disconnecting the connection." << std::endl;
+                KapEngine::Debug::error("Connection: Received empty message while Authenticated. Disconnecting.");
                 disconnect();
             }
             break;
         }
         case MessageType::Disconnect: {
-            std::cout << "Connection: received disconnect message" << std::endl;
+            KapEngine::Debug::log("Connection: Received disconnect message.");
             disconnect();
             break;
         }
