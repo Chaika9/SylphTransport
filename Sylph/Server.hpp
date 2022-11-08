@@ -42,6 +42,6 @@ namespace KapMirror::Sylph {
       public:
         std::function<void(Server&, int)> onConnected = nullptr;
         std::function<void(Server&, int)> onDisconnected = nullptr;
-        std::function<void(Server&, int, std::shared_ptr<ArraySegment<byte>>)> onData = nullptr;
+        std::function<void(Server&, int, const std::shared_ptr<ArraySegment<byte>>&)> onData = nullptr;
     };
 } // namespace KapMirror::Sylph

@@ -14,21 +14,9 @@ SylphTransport::~SylphTransport() {
 void SylphTransport::createClient() {
     client = std::make_shared<Sylph::Client>();
 
-    client->onConnected = [this](Sylph::Client&) {
-        if (onClientConnected) {
-            onClientConnected(*this);
-        }
-    };
-    client->onDisconnected = [this](Sylph::Client&) {
-        if (onClientDisconnected) {
-            onClientDisconnected(*this);
-        }
-    };
-    client->onData = [this](Sylph::Client&, std::shared_ptr<ArraySegment<byte>> data) {
-        if (onClientDataReceived) {
-            onClientDataReceived(*this, data);
-        }
-    };
+    client->onConnected = [this](Sylph::Client&) { onClientConnected(*this); };
+    client->onDisconnected = [this](Sylph::Client&) { onClientDisconnected(*this); };
+    client->onData = [this](Sylph::Client&, std::shared_ptr<ArraySegment<byte>> data) { onClientDataReceived(*this, data); };
 }
 
 bool SylphTransport::clientConnected() { return client != nullptr && client->isConnected(); }
@@ -68,20 +56,10 @@ void SylphTransport::serverStart(int port) {
     server = std::make_shared<Sylph::Server>();
 
     // Servers Hooks
-    server->onConnected = [this](Sylph::Server&, int connectionId) {
-        if (onServerConnected) {
-            onServerConnected(*this, connectionId);
-        }
-    };
-    server->onDisconnected = [this](Sylph::Server&, int connectionId) {
-        if (onServerDisconnected) {
-            onServerDisconnected(*this, connectionId);
-        }
-    };
-    server->onData = [this](Sylph::Server&, int connectionId, std::shared_ptr<ArraySegment<byte>> data) {
-        if (onServerDataReceived) {
-            onServerDataReceived(*this, connectionId, data);
-        }
+    server->onConnected = [this](Sylph::Server&, int connectionId) { onServerConnected(*this, connectionId); };
+    server->onDisconnected = [this](Sylph::Server&, int connectionId) { onServerDisconnected(*this, connectionId); };
+    server->onData = [this](Sylph::Server&, int connectionId, const std::shared_ptr<ArraySegment<byte>>& data) {
+        onServerDataReceived(*this, connectionId, data);
     };
 
     server->start(port);
