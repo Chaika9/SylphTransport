@@ -1,6 +1,6 @@
 [![KapMirror](https://img.shields.io/badge/KapMirror-brightgreen.svg)](https://github.com/Chaika9/KapMirror/)
 [![Release](https://img.shields.io/github/release/Chaika9/SylphTransport.svg)](https://github.com/Chaika9/SylphTransport/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/vis2k/Mirror/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://github.com/Chaika9/SylphTransport/blob/main/LICENSE)
 
 <img src="Images/Sylph.png" title="Sylph" alt="Image"/>
 
