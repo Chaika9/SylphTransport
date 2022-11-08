@@ -16,7 +16,7 @@ void SylphTransport::createClient() {
 
     client->onConnected = [this](Sylph::Client&) { onClientConnected(*this); };
     client->onDisconnected = [this](Sylph::Client&) { onClientDisconnected(*this); };
-    client->onData = [this](Sylph::Client&, std::shared_ptr<ArraySegment<byte>> data) { onClientDataReceived(*this, data); };
+    client->onData = [this](Sylph::Client&, const std::shared_ptr<ArraySegment<byte>>& data) { onClientDataReceived(*this, data); };
 }
 
 bool SylphTransport::clientConnected() { return client != nullptr && client->isConnected(); }
