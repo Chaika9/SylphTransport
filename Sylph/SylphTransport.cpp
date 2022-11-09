@@ -38,6 +38,8 @@ void SylphTransport::clientDisconnect() {
 void SylphTransport::clientSend(std::shared_ptr<ArraySegment<byte>> data) {
     if (client != nullptr) {
         client->send(data);
+
+        onClientDataSent(*this, data);
     }
 }
 
@@ -77,6 +79,8 @@ void SylphTransport::serverStop() {
 void SylphTransport::serverSend(int connectionId, std::shared_ptr<ArraySegment<byte>> data) {
     if (server != nullptr) {
         server->send(connectionId, data);
+
+        onServerDataSent(*this, connectionId, data);
     }
 }
 
