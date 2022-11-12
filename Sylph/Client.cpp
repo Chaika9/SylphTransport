@@ -31,7 +31,7 @@ void Client::connect(const std::string& ip, int port) {
         throw std::runtime_error("Invalid port number");
     }
 
-    auto address = Address::createAddress(ip, port, KapMirror::Sylph::Address::SocketType::UDP);
+    auto address = Address::createAddress(ip, port, KapMirror::Address::SocketType::UDP);
     client = std::make_shared<UdpClient>(address);
     connection = std::make_shared<ClientConnection>(address, client);
 

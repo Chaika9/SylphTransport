@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Address.hpp"
+#include "KapMirror/Core/Network/Address.hpp"
 #include "KapMirror/Core/ArraySegment.hpp"
 #include "KapMirror/Core/NetworkWriter.hpp"
 #include <functional>

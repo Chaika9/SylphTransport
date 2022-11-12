@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UdpClient.hpp"
-#include "ClientConnection.hpp"
+#include "KapMirror/Core/Network/UdpClient.hpp"
 #include "KapMirror/Core/ArraySegment.hpp"
+#include "ClientConnection.hpp"
 #include <functional>
 
 #define MTU_DEF                                                                                                                            \

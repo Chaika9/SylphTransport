@@ -1,7 +1,7 @@
 #pragma once
 
+#include "KapMirror/Core/Network/UdpClient.hpp"
 #include "Connection.hpp"
-#include "UdpClient.hpp"
 
 namespace KapMirror::Sylph {
     class ClientConnection : public Connection {

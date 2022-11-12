@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UdpListener.hpp"
-#include "ServerConnection.hpp"
+#include "KapMirror/Core/Network/UdpListener.hpp"
 #include "KapMirror/Core/ArraySegment.hpp"
+#include "ServerConnection.hpp"
 #include "Dictionary.hpp"
 #include <functional>
 #include <list>
