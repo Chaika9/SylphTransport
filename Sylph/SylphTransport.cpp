@@ -30,9 +30,6 @@ void SylphTransport::clientDisconnect() {
     if (client != nullptr) {
         client->disconnect();
     }
-
-    // clean values
-    client = nullptr;
 }
 
 void SylphTransport::clientSend(const std::shared_ptr<ArraySegment<byte>>& data) {
