@@ -18,7 +18,7 @@ void Server::start(int port) {
         throw std::runtime_error("Invalid port number");
     }
 
-    auto address = std::make_shared<Address>(port, false, KapMirror::Address::SocketType::UDP);
+    auto address = std::make_shared<Address>(port, true, KapMirror::Address::SocketType::UDP);
     listener = std::make_shared<UdpListener>(address);
 
     try {
